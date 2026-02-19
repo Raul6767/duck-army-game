@@ -1,7 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duck Army Game</title>
+    <style>
+        body {
+            background-color: #000;
+            color: white;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        button {
+            padding: 15px 30px;
+            margin: 20px;
+            font-size: 18px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+        }
+
+        #gameArea {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🦆 Duck Army Jobs</h1>
+
+<button onclick="startJob('🌱')">🌱 Farmer</button>
+<button onclick="startJob('🏭')">🏭 Factory</button>
+<button onclick="startJob('🛒')">🛒 Merchant</button>
+
+<div id="gameArea"></div>
+
 <script>
 function startJob(jobEmoji) {
+
     const gameArea = document.getElementById("gameArea");
-    const timerText = document.getElementById("timerText");
 
     let rarity;
     let minSeconds;
@@ -9,21 +45,21 @@ function startJob(jobEmoji) {
 
     const roll = Math.random();
 
-    // Decide rarity
+    // Rarity system
     if (roll < 0.5) {
         rarity = "❌ Bad";
         minSeconds = 0;
-        maxSeconds = 180; // 0-3 min
+        maxSeconds = 180; // 0-3 minutes
     } 
     else if (roll < 0.85) {
         rarity = "⭐ Rare";
-        minSeconds = 240; 
-        maxSeconds = 360; // 4-6 min
+        minSeconds = 240;
+        maxSeconds = 360; // 4-6 minutes
     } 
     else {
         rarity = "🔥 OP";
         minSeconds = 420;
-        maxSeconds = 600; // 7-10 min
+        maxSeconds = 600; // 7-10 minutes
     }
 
     const totalSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
@@ -32,13 +68,14 @@ function startJob(jobEmoji) {
 
     gameArea.innerHTML = `
         <div style="font-size:20px; margin-bottom:10px;">${rarity}</div>
-        <div style="font-size:50px;">${jobEmoji}</div>
-        <div id="countdown" style="font-size:25px; margin-top:10px;"></div>
+        <div style="font-size:60px;">${jobEmoji}</div>
+        <div id="countdown" style="font-size:30px; margin-top:10px;"></div>
     `;
 
     const countdownElement = document.getElementById("countdown");
 
     const timerInterval = setInterval(() => {
+
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
 
@@ -59,3 +96,6 @@ function startJob(jobEmoji) {
     }, 1000);
 }
 </script>
+
+</body>
+</html>
