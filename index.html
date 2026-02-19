@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duck Army - Choose Your Job</title>
+    <style>
+        body {
+            background-color: #111;
+            color: white;
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+        }
+
+        h1 {
+            font-size: 40px;
+        }
+
+        .job {
+            display: inline-block;
+            margin: 30px;
+            padding: 30px 50px;
+            background: #222;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .job:hover {
+            background: gold;
+            color: black;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+<h1>Choose Your Job</h1>
+
+<div class="job" onclick="chooseJob('Farmer')">🌱 Farmer</div>
+<div class="job" onclick="chooseJob('Factory')">🏭 Factory</div>
+<div class="job" onclick="chooseJob('Merchant')">🛒 Merchant</div>
+
+<script>
+function chooseJob(job) {
+    alert("You selected: " + job);
+}
+</script>
+
+</body>
+</html>
