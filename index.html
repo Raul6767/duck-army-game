@@ -1,47 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Duck Army Game</title>
-    <style>
-        body {
-            background-color: #000;
-            color: white;
-            text-align: center;
-            font-family: Arial, sans-serif;
-        }
-
-        button {
-            padding: 15px 30px;
-            margin: 20px;
-            font-size: 18px;
-            border-radius: 10px;
-            border: none;
-            cursor: pointer;
-        }
-
-        #gameArea {
-            margin-top: 40px;
-        }
-    </style>
-</head>
-<body>
-
-<h1>🦆 Duck Army Jobs</h1>
-
-<button onclick="startJob('🌱')">🌱 Farmer</button>
-<button onclick="startJob('🏭')">🏭 Factory</button>
-<button onclick="startJob('🛒')">🛒 Merchant</button>
-
-<div id="gameArea"></div>
-
 <script>
+
+let money = 0;
+let isWorking = false;
+
+function updateMoneyDisplay() {
+    document.getElementById("moneyDisplay").innerText = "💰 Money: $" + money;
+}
+
+function setButtonsDisabled(state) {
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => {
+        btn.disabled = state;
+        btn.style.opacity = state ? "0.5" : "1";
+    });
+}
+
 function startJob(jobEmoji) {
+
+    if (isWorking) return;
+
+    isWorking = true;
+    setButtonsDisabled(true);
 
     const gameArea = document.getElementById("gameArea");
 
     let rarity;
     let minSeconds;
     let maxSeconds;
+    let reward;
 
     const roll = Math.random();
 
@@ -49,17 +35,20 @@ function startJob(jobEmoji) {
     if (roll < 0.5) {
         rarity = "❌ Bad";
         minSeconds = 0;
-        maxSeconds = 180; // 0-3 minutes
+        maxSeconds = 180;
+        reward = 5;
     } 
     else if (roll < 0.85) {
         rarity = "⭐ Rare";
         minSeconds = 240;
-        maxSeconds = 360; // 4-6 minutes
+        maxSeconds = 360;
+        reward = 25;
     } 
     else {
         rarity = "🔥 OP";
         minSeconds = 420;
-        maxSeconds = 600; // 7-10 minutes
+        maxSeconds = 600;
+        reward = 100;
     }
 
     const totalSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
@@ -90,12 +79,17 @@ function startJob(jobEmoji) {
 
         if (timeLeft < 0) {
             clearInterval(timerInterval);
-            countdownElement.innerHTML = "✅ Job Complete!";
+
+            money += reward;
+            updateMoneyDisplay();
+
+            countdownElement.innerHTML = "✅ Earned $" + reward;
+
+            isWorking = false;
+            setButtonsDisabled(false);
         }
 
     }, 1000);
 }
-</script>
 
-</body>
-</html>
+</script>
