@@ -1,50 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Duck Army - Choose Your Job</title>
-    <style>
-        body {
-            background-color: #111;
-            color: white;
-            font-family: Arial;
-            text-align: center;
-            margin-top: 100px;
-        }
-
-        h1 {
-            font-size: 40px;
-        }
-
-        .job {
-            display: inline-block;
-            margin: 30px;
-            padding: 30px 50px;
-            background: #222;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .job:hover {
-            background: gold;
-            color: black;
-            transform: scale(1.1);
-        }
-    </style>
-</head>
-<body>
-
-<h1>Choose Your Job</h1>
-
-<div class="job" onclick="chooseJob('Farmer')">🌱 Farmer</div>
-<div class="job" onclick="chooseJob('Factory')">🏭 Factory</div>
-<div class="job" onclick="chooseJob('Merchant')">🛒 Merchant</div>
-
 <script>
-function chooseJob(job) {
-    alert("You selected: " + job);
+function startJob(jobEmoji) {
+    const gameArea = document.getElementById("gameArea");
+    const timerText = document.getElementById("timerText");
+
+    let rarity;
+    let minSeconds;
+    let maxSeconds;
+
+    const roll = Math.random();
+
+    // Decide rarity
+    if (roll < 0.5) {
+        rarity = "❌ Bad";
+        minSeconds = 0;
+        maxSeconds = 180; // 0-3 min
+    } 
+    else if (roll < 0.85) {
+        rarity = "⭐ Rare";
+        minSeconds = 240; 
+        maxSeconds = 360; // 4-6 min
+    } 
+    else {
+        rarity = "🔥 OP";
+        minSeconds = 420;
+        maxSeconds = 600; // 7-10 min
+    }
+
+    const totalSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+
+    let timeLeft = totalSeconds;
+
+    gameArea.innerHTML = `
+        <div style="font-size:20px; margin-bottom:10px;">${rarity}</div>
+        <div style="font-size:50px;">${jobEmoji}</div>
+        <div id="countdown" style="font-size:25px; margin-top:10px;"></div>
+    `;
+
+    const countdownElement = document.getElementById("countdown");
+
+    const timerInterval = setInterval(() => {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        const formattedTime =
+            String(minutes).padStart(2, '0') +
+            ":" +
+            String(seconds).padStart(2, '0');
+
+        countdownElement.innerHTML = formattedTime;
+
+        timeLeft--;
+
+        if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            countdownElement.innerHTML = "✅ Job Complete!";
+        }
+
+    }, 1000);
 }
 </script>
-
-</body>
-</html>
