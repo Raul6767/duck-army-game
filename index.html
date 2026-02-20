@@ -1,92 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Duck Army Game</title>
-
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: white;
-    text-align: center;
-}
-
-h1 {
-    margin-top: 60px;
-    font-size: 40px;
-}
-
-.menu {
-    margin-top: 40px;
-}
-
-button {
-    padding: 12px 30px;
-    margin: 10px;
-    font-size: 18px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    background: #e0e0e0;
-}
-
-button:hover {
-    background: #cfcfcf;
-}
-
-.hidden {
-    display: none;
-}
-
-.back-btn {
-    margin-top: 20px;
-    background: #888;
-    color: white;
-}
-
-#farmArea {
-    margin-top: 30px;
-    font-size: 60px;
-}
-
-#result {
-    margin-top: 20px;
-    font-size: 28px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>🦆 Duck Army</h1>
-
-<div id="mainMenu" class="menu">
-    <button onclick="showFarmer()">🌱 Farmer</button>
-    <button onclick="showFactory()">🏭 Factory</button>
-    <button onclick="showMerchant()">🛒 Merchant</button>
-</div>
-
-<div id="farmerMenu" class="menu hidden">
-    <h2>🌱 Farmer</h2>
-    <button onclick="startPlant()">Plant Seed</button>
-    <div id="farmArea"></div>
-    <div id="result"></div>
-    <button class="back-btn" onclick="goBack()">⬅ Back</button>
-</div>
-
-<div id="merchantMenu" class="menu hidden">
-    <h2>🛒 Merchant</h2>
-    <button>Create Magazine</button>
-    <button>Join Magazine</button>
-    <br>
-    <button class="back-btn" onclick="goBack()">⬅ Back</button>
-</div>
-
 <script>
 let growTimer;
+let flowerTimer;
 
+let factoryScore = 0;
+let factoryGoal = 0;
+let boxInterval;
+let boxSpeed;
+let factoryRarity;
+
+// ---------- MENU ----------
 function showFarmer() {
     hideAll();
     document.getElementById("farmerMenu").classList.remove("hidden");
@@ -98,7 +20,9 @@ function showMerchant() {
 }
 
 function showFactory() {
-    alert("Factory coming soon!");
+    hideAll();
+    document.getElementById("factoryMenu").classList.remove("hidden");
+    startFactory();
 }
 
 function goBack() {
@@ -110,11 +34,16 @@ function hideAll() {
     document.getElementById("mainMenu").classList.add("hidden");
     document.getElementById("farmerMenu").classList.add("hidden");
     document.getElementById("merchantMenu").classList.add("hidden");
+    document.getElementById("factoryMenu").classList.add("hidden");
 }
 
+// ---------- FARMER (UNCHANGED CORE) ----------
 function startPlant() {
     let farm = document.getElementById("farmArea");
     let result = document.getElementById("result");
+
+    clearInterval(growTimer);
+    clearInterval(flowerTimer);
 
     result.innerHTML = "";
     farm.innerHTML = "🌱";
@@ -123,7 +52,6 @@ function startPlant() {
 
     growTimer = setInterval(function() {
         timeLeft--;
-
         if (timeLeft <= 0) {
             clearInterval(growTimer);
             growFlower();
@@ -141,25 +69,94 @@ function growFlower() {
 
     let random = Math.random();
     let chosenFlower;
-    let rarityText;
 
     if (random < 0.6) {
-        chosenFlower = badFlowers[Math.floor(Math.random() * badFlowers.length)];
-        rarityText = "Bad";
+        chosenFlower = badFlowers[Math.floor(Math.random()*badFlowers.length)];
+        result.innerHTML = "Rarity: Bad";
     }
     else if (random < 0.9) {
-        chosenFlower = rareFlowers[Math.floor(Math.random() * rareFlowers.length)];
-        rarityText = "Rare";
+        chosenFlower = rareFlowers[Math.floor(Math.random()*rareFlowers.length)];
+        result.innerHTML = "Rarity: Rare";
     }
     else {
-        chosenFlower = opFlowers[Math.floor(Math.random() * opFlowers.length)];
-        rarityText = "OP 🔥";
+        chosenFlower = opFlowers[Math.floor(Math.random()*opFlowers.length)];
+        result.innerHTML = "Rarity: OP 🔥";
     }
 
     farm.innerHTML = chosenFlower;
-    result.innerHTML = "Rarity: " + rarityText;
+}
+
+// ---------- FACTORY ----------
+function startFactory() {
+    factoryScore = 0;
+
+    let random = Math.random();
+
+    if (random < 0.6) {
+        factoryRarity = "Bad";
+        factoryGoal = randomRange(10,30);
+        boxSpeed = 2; // slow
+    }
+    else if (random < 0.9) {
+        factoryRarity = "Rare";
+        factoryGoal = randomRange(40,60);
+        boxSpeed = 4; // medium
+    }
+    else {
+        factoryRarity = "OP";
+        factoryGoal = randomRange(70,100);
+        boxSpeed = 5; // faster but clickable
+    }
+
+    updateScore();
+
+    boxInterval = setInterval(createBox, 1000);
+}
+
+function createBox() {
+    let area = document.getElementById("factoryArea");
+
+    let box = document.createElement("div");
+    box.classList.add("box");
+    box.style.left = "-60px";
+
+    area.appendChild(box);
+
+    let position = -60;
+
+    let move = setInterval(function() {
+        position += boxSpeed;
+        box.style.left = position + "px";
+
+        if (position > window.innerWidth) {
+            clearInterval(move);
+            box.remove();
+        }
+    }, 20);
+
+    box.onclick = function() {
+        factoryScore++;
+        updateScore();
+        box.remove();
+
+        if (factoryScore >= factoryGoal) {
+            clearInterval(boxInterval);
+            alert("Factory Complete! 🏭🔥");
+        }
+    };
+}
+
+function updateScore() {
+    document.getElementById("factoryScore").innerHTML =
+        factoryScore + " / " + factoryGoal + " (" + factoryRarity + ")";
+}
+
+function randomRange(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function stopFactory() {
+    clearInterval(boxInterval);
+    goBack();
 }
 </script>
-
-</body>
-</html>
