@@ -36,4 +36,195 @@
 
     <div id="gameArea"></div>
 
-    <script>
+<script>
+
+let money = 0;
+let isWorking = false;
+
+function updateMoneyDisplay() {
+    document.getElementById("moneyDisplay").innerText = "💰 Money: $" + money;
+}
+
+function setButtonsDisabled(state) {
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => {
+        btn.disabled = state;
+        btn.style.opacity = state ? "0.5" : "1";
+    });
+}
+
+// ================= FARMER + MERCHANT =================
+
+function startJob(jobEmoji) {
+
+    if (isWorking) return;
+
+    isWorking = true;
+    setButtonsDisabled(true);
+
+    const gameArea = document.getElementById("gameArea");
+
+    let rarity, minSeconds, maxSeconds, reward;
+    const roll = Math.random();
+
+    if (roll < 0.5) {
+        rarity = "❌ Bad";
+        minSeconds = 0;
+        maxSeconds = 180;
+        reward = 5;
+    } 
+    else if (roll < 0.85) {
+        rarity = "⭐ Rare";
+        minSeconds = 240;
+        maxSeconds = 360;
+        reward = 25;
+    } 
+    else {
+        rarity = "🔥 OP";
+        minSeconds = 420;
+        maxSeconds = 600;
+        reward = 100;
+    }
+
+    const totalSeconds = Math.floor(Math.random() * (maxSeconds - minSeconds + 1)) + minSeconds;
+    let timeLeft = totalSeconds;
+
+    gameArea.innerHTML = `
+        <div style="font-size:20px;">${rarity}</div>
+        <div style="font-size:60px;">${jobEmoji}</div>
+        <div id="countdown" style="font-size:30px;"></div>
+    `;
+
+    const countdownElement = document.getElementById("countdown");
+
+    const timerInterval = setInterval(() => {
+
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+
+        countdownElement.innerHTML =
+            String(minutes).padStart(2, '0') +
+            ":" +
+            String(seconds).padStart(2, '0');
+
+        timeLeft--;
+
+        if (timeLeft < 0) {
+            clearInterval(timerInterval);
+            money += reward;
+            updateMoneyDisplay();
+            countdownElement.innerHTML = "✅ Earned $" + reward;
+            isWorking = false;
+            setButtonsDisabled(false);
+        }
+
+    }, 1000);
+}
+
+// ================= FACTORY MINI GAME =================
+
+function startFactory() {
+
+    if (isWorking) return;
+
+    isWorking = true;
+    setButtonsDisabled(true);
+
+    const gameArea = document.getElementById("gameArea");
+
+    let rarity, goalMin, goalMax, speed, reward;
+    const roll = Math.random();
+
+    if (roll < 0.5) {
+        rarity = "❌ Bad";
+        goalMin = 10;
+        goalMax = 30;
+        speed = 2;
+        reward = 15;
+    } 
+    else if (roll < 0.85) {
+        rarity = "⭐ Rare";
+        goalMin = 40;
+        goalMax = 60;
+        speed = 4;
+        reward = 60;
+    } 
+    else {
+        rarity = "🔥 OP";
+        goalMin = 70;
+        goalMax = 100;
+        speed = 6;
+        reward = 150;
+    }
+
+    let goal = Math.floor(Math.random() * (goalMax - goalMin + 1)) + goalMin;
+    let score = 0;
+
+    gameArea.innerHTML = `
+        <div style="font-size:20px;">${rarity}</div>
+        <div style="font-size:25px;" id="factoryScore">0 / ${goal}</div>
+        <div id="factoryArea" style="
+            position: relative;
+            height: 200px;
+            margin-top:20px;
+            overflow:hidden;
+            border:2px solid white;">
+        </div>
+    `;
+
+    const factoryArea = document.getElementById("factoryArea");
+    const scoreDisplay = document.getElementById("factoryScore");
+
+    function spawnBox() {
+
+        const box = document.createElement("div");
+        box.style.position = "absolute";
+        box.style.left = "-40px";
+        box.style.top = Math.random() * 160 + "px";
+        box.style.width = "40px";
+        box.style.height = "40px";
+        box.style.background = "brown";
+        box.style.cursor = "pointer";
+
+        factoryArea.appendChild(box);
+
+        let position = -40;
+
+        const moveInterval = setInterval(() => {
+            position += speed;
+            box.style.left = position + "px";
+
+            if (position > factoryArea.offsetWidth) {
+                clearInterval(moveInterval);
+                box.remove();
+            }
+        }, 16);
+
+        box.onclick = function () {
+            clearInterval(moveInterval);
+            box.remove();
+            score++;
+            scoreDisplay.innerText = score + " / " + goal;
+
+            if (score >= goal) {
+                winFactory();
+            }
+        };
+    }
+
+    const spawnInterval = setInterval(spawnBox, 800);
+
+    function winFactory() {
+        clearInterval(spawnInterval);
+        factoryArea.innerHTML = "<h2>🏭 Completed!</h2>";
+        money += reward;
+        updateMoneyDisplay();
+        isWorking = false;
+        setButtonsDisabled(false);
+    }
+}
+
+</script>
+
+</body>
+</html>
