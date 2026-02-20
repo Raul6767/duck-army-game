@@ -1,100 +1,103 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Duck Army Game</title>
-  <meta charset="UTF-8">
-  <style>
-    body {
-      background: #1e1e1e;
-      color: white;
-      font-family: Arial;
-      text-align: center;
-      margin-top: 100px;
-    }
+    <meta charset="UTF-8">
+    <title>Duck Army Game</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #121212;
+            color: white;
+            text-align: center;
+        }
 
-    button {
-      padding: 10px;
-      margin: 5px;
-      width: 200px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+        h1 {
+            margin-top: 80px;
+            font-size: 40px;
+        }
 
-    #magazineInfo {
-      margin-top: 20px;
-    }
-  </style>
+        h2 {
+            margin-top: 60px;
+        }
+
+        .menu {
+            margin-top: 40px;
+        }
+
+        button {
+            padding: 12px 30px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            background: #e0e0e0;
+        }
+
+        button:hover {
+            background: #cfcfcf;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .back-btn {
+            margin-top: 30px;
+            background: #888;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
 
-  <h1>🦆 Duck Army - Merchant</h1>
+<h1>🦆 Duck Army</h1>
 
-  <button onclick="createMagazine()">Create Magazine</button>
-  <button onclick="joinMagazine()">Join Magazine</button>
+<!-- MAIN MENU -->
+<div id="mainMenu" class="menu">
+    <button onclick="showFarmer()">🌱 Farmer</button>
+    <button onclick="showFactory()">🏭 Factory</button>
+    <button onclick="showMerchant()">🛒 Merchant</button>
+</div>
 
-  <div id="magazineInfo"></div>
+<!-- MERCHANT MENU -->
+<div id="merchantMenu" class="menu hidden">
+    <h2>🦆 Duck Army - Merchant</h2>
+    <button onclick="createMagazine()">Create Magazine</button>
+    <button onclick="joinMagazine()">Join Magazine</button>
+    <br>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+<script>
+function showMerchant() {
+    document.getElementById("mainMenu").classList.add("hidden");
+    document.getElementById("merchantMenu").classList.remove("hidden");
+}
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBBEpyg5HdJzAxtuyHvf8sS2i4E8Ps4PeY",
-      authDomain: "duck-army-game.firebaseapp.com",
-      projectId: "duck-army-game",
-      storageBucket: "duck-army-game.firebasestorage.app",
-      messagingSenderId: "1032503017223",
-      appId: "1:1032503017223:web:47780dbf73eed8ca9c0fa2"
-    };
+function goBack() {
+    document.getElementById("merchantMenu").classList.add("hidden");
+    document.getElementById("mainMenu").classList.remove("hidden");
+}
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+function showFarmer() {
+    alert("Farmer section coming soon!");
+}
 
-    window.createMagazine = async function () {
-      const magazineName = prompt("Enter magazine name:");
-      if (!magazineName) return;
+function showFactory() {
+    alert("Factory section coming soon!");
+}
 
-      const tradeType = prompt("Trade what? (Money / DuckyTokens / Role)");
-      if (!tradeType) return;
+function createMagazine() {
+    alert("Create Magazine clicked!");
+}
 
-      await setDoc(doc(db, "magazines", magazineName), {
-        owner: magazineName,
-        trade: tradeType,
-        createdAt: Date.now()
-      });
-
-      alert("Magazine created!");
-    };
-
-    window.joinMagazine = async function () {
-      const magazineName = prompt("Enter magazine name to join:");
-      if (!magazineName) return;
-
-      const ref = doc(db, "magazines", magazineName);
-      const snap = await getDoc(ref);
-
-      if (!snap.exists()) {
-        alert("Magazine not found!");
-        return;
-      }
-
-      const data = snap.data();
-
-      document.getElementById("magazineInfo").innerHTML =
-        "<b>Magazine:</b> " + magazineName +
-        "<br><b>Owner:</b> " + data.owner +
-        "<br><b>Trading:</b> " + data.trade;
-
-      onSnapshot(ref, (docSnap) => {
-        const updated = docSnap.data();
-        document.getElementById("magazineInfo").innerHTML =
-          "<b>Magazine:</b> " + magazineName +
-          "<br><b>Owner:</b> " + updated.owner +
-          "<br><b>Trading:</b> " + updated.trade +
-          "<br><small>Live Updated</small>";
-      });
-    };
-  </script>
+function joinMagazine() {
+    alert("Join Magazine clicked!");
+}
+</script>
 
 </body>
 </html>
