@@ -1,3 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Duck Army Game</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+    text-align: center;
+}
+
+h1 {
+    margin-top: 60px;
+    font-size: 40px;
+}
+
+.menu {
+    margin-top: 40px;
+}
+
+button {
+    padding: 12px 30px;
+    margin: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #e0e0e0;
+}
+
+button:hover {
+    background: #cfcfcf;
+}
+
+.hidden {
+    display: none;
+}
+
+.back-btn {
+    margin-top: 20px;
+    background: #888;
+    color: white;
+}
+
+#farmArea {
+    margin-top: 30px;
+    font-size: 60px;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 28px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🦆 Duck Army</h1>
+
+<div id="mainMenu" class="menu">
+    <button onclick="showFarmer()">🌱 Farmer</button>
+    <button onclick="showFactory()">🏭 Factory</button>
+    <button onclick="showMerchant()">🛒 Merchant</button>
+</div>
+
+<div id="farmerMenu" class="menu hidden">
+    <h2>🌱 Farmer</h2>
+    <button onclick="startPlant()">Plant Seed</button>
+    <div id="farmArea"></div>
+    <div id="result"></div>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
+<div id="merchantMenu" class="menu hidden">
+    <h2>🛒 Merchant</h2>
+    <button>Create Magazine</button>
+    <button>Join Magazine</button>
+    <br>
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
 <script>
 let growTimer;
 
@@ -49,7 +135,6 @@ function growFlower() {
     let farm = document.getElementById("farmArea");
     let result = document.getElementById("result");
 
-    // Rarity flower pools
     let badFlowers = ["💮","🌸","🥀"];
     let rareFlowers = ["🌼","🌹","🌷"];
     let opFlowers = ["🌻","💐","🪷","🪻","🌺"];
@@ -59,17 +144,14 @@ function growFlower() {
     let rarityText;
 
     if (random < 0.6) {
-        // 60% BAD
         chosenFlower = badFlowers[Math.floor(Math.random() * badFlowers.length)];
         rarityText = "Bad";
     }
     else if (random < 0.9) {
-        // 30% RARE
         chosenFlower = rareFlowers[Math.floor(Math.random() * rareFlowers.length)];
         rarityText = "Rare";
     }
     else {
-        // 10% OP
         chosenFlower = opFlowers[Math.floor(Math.random() * opFlowers.length)];
         rarityText = "OP 🔥";
     }
@@ -78,3 +160,6 @@ function growFlower() {
     result.innerHTML = "Rarity: " + rarityText;
 }
 </script>
+
+</body>
+</html>
