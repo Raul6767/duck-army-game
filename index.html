@@ -1,54 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Duck Army Game</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #121212;
-            color: white;
-            text-align: center;
-        }
+<meta charset="UTF-8">
+<title>Duck Army Game</title>
 
-        h1 {
-            margin-top: 80px;
-            font-size: 40px;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: white;
+    text-align: center;
+}
 
-        h2 {
-            margin-top: 60px;
-        }
+h1 {
+    margin-top: 60px;
+    font-size: 40px;
+}
 
-        .menu {
-            margin-top: 40px;
-        }
+.menu {
+    margin-top: 40px;
+}
 
-        button {
-            padding: 12px 30px;
-            margin: 10px;
-            font-size: 18px;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            background: #e0e0e0;
-        }
+button {
+    padding: 12px 30px;
+    margin: 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background: #e0e0e0;
+}
 
-        button:hover {
-            background: #cfcfcf;
-        }
+button:hover {
+    background: #cfcfcf;
+}
 
-        .hidden {
-            display: none;
-        }
+.hidden {
+    display: none;
+}
 
-        .back-btn {
-            margin-top: 30px;
-            background: #888;
-            color: white;
-        }
-    </style>
+.back-btn {
+    margin-top: 20px;
+    background: #888;
+    color: white;
+}
+
+#farmArea {
+    margin-top: 30px;
+    font-size: 60px;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 28px;
+}
+</style>
 </head>
 
 <body>
@@ -62,40 +69,90 @@
     <button onclick="showMerchant()">🛒 Merchant</button>
 </div>
 
+<!-- FARMER MENU -->
+<div id="farmerMenu" class="menu hidden">
+    <h2>🌱 Farmer</h2>
+    <button onclick="startPlant()">Plant Seed</button>
+
+    <div id="farmArea"></div>
+    <div id="result"></div>
+
+    <button class="back-btn" onclick="goBack()">⬅ Back</button>
+</div>
+
 <!-- MERCHANT MENU -->
 <div id="merchantMenu" class="menu hidden">
-    <h2>🦆 Duck Army - Merchant</h2>
-    <button onclick="createMagazine()">Create Magazine</button>
-    <button onclick="joinMagazine()">Join Magazine</button>
+    <h2>🛒 Merchant</h2>
+    <button>Create Magazine</button>
+    <button>Join Magazine</button>
     <br>
     <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
 <script>
+let growTimer;
+
+function showFarmer() {
+    hideAll();
+    document.getElementById("farmerMenu").classList.remove("hidden");
+}
+
 function showMerchant() {
-    document.getElementById("mainMenu").classList.add("hidden");
+    hideAll();
     document.getElementById("merchantMenu").classList.remove("hidden");
 }
 
+function showFactory() {
+    alert("Factory coming soon!");
+}
+
 function goBack() {
-    document.getElementById("merchantMenu").classList.add("hidden");
+    hideAll();
     document.getElementById("mainMenu").classList.remove("hidden");
 }
 
-function showFarmer() {
-    alert("Farmer section coming soon!");
+function hideAll() {
+    document.getElementById("mainMenu").classList.add("hidden");
+    document.getElementById("farmerMenu").classList.add("hidden");
+    document.getElementById("merchantMenu").classList.add("hidden");
 }
 
-function showFactory() {
-    alert("Factory section coming soon!");
+function startPlant() {
+    let farm = document.getElementById("farmArea");
+    let result = document.getElementById("result");
+
+    result.innerHTML = "";
+    farm.innerHTML = "🌱";
+
+    let timeLeft = 5;
+
+    growTimer = setInterval(function() {
+        timeLeft--;
+
+        if (timeLeft <= 0) {
+            clearInterval(growTimer);
+            farm.innerHTML = "";
+            giveFlower();
+        }
+    }, 1000);
 }
 
-function createMagazine() {
-    alert("Create Magazine clicked!");
-}
+function giveFlower() {
+    let result = document.getElementById("result");
+    let random = Math.random();
 
-function joinMagazine() {
-    alert("Join Magazine clicked!");
+    if (random < 0.6) {
+        // 60% BAD
+        result.innerHTML = "You got: 🥀 BAD Flower";
+    }
+    else if (random < 0.9) {
+        // 30% RARE
+        result.innerHTML = "You got: 🌹 RARE Flower!";
+    }
+    else {
+        // 10% OP
+        result.innerHTML = "YOU GOT 🌻 OP FLOWER!!! 🔥";
+    }
 }
 </script>
 
