@@ -1,6 +1,5 @@
 <script>
 let growTimer;
-let flowerTimer;
 
 let factoryScore = 0;
 let factoryGoal = 0;
@@ -8,7 +7,7 @@ let boxInterval;
 let boxSpeed;
 let factoryRarity;
 
-// ---------- MENU ----------
+// -------- MENU --------
 function showFarmer() {
     hideAll();
     document.getElementById("farmerMenu").classList.remove("hidden");
@@ -37,13 +36,10 @@ function hideAll() {
     document.getElementById("factoryMenu").classList.add("hidden");
 }
 
-// ---------- FARMER (UNCHANGED CORE) ----------
+// -------- FARMER --------
 function startPlant() {
     let farm = document.getElementById("farmArea");
     let result = document.getElementById("result");
-
-    clearInterval(growTimer);
-    clearInterval(flowerTimer);
 
     result.innerHTML = "";
     farm.innerHTML = "🌱";
@@ -52,6 +48,7 @@ function startPlant() {
 
     growTimer = setInterval(function() {
         timeLeft--;
+
         if (timeLeft <= 0) {
             clearInterval(growTimer);
             growFlower();
@@ -63,41 +60,44 @@ function growFlower() {
     let farm = document.getElementById("farmArea");
     let result = document.getElementById("result");
 
-    let badFlowers = ["💮","🌸","🥀"];
-    let rareFlowers = ["🌼","🌹","🌷"];
-    let opFlowers = ["🌻","💐","🪷","🪻","🌺"];
+    let bad = ["💮","🌸","🥀"];
+    let rare = ["🌼","🌹","🌷"];
+    let op = ["🌻","💐","🪷","🪻","🌺"];
 
-    let random = Math.random();
-    let chosenFlower;
+    let r = Math.random();
+    let chosen;
 
-    if (random < 0.6) {
-        chosenFlower = badFlowers[Math.floor(Math.random()*badFlowers.length)];
+    if (r < 0.6) {
+        chosen = bad[Math.floor(Math.random()*bad.length)];
         result.innerHTML = "Rarity: Bad";
     }
-    else if (random < 0.9) {
-        chosenFlower = rareFlowers[Math.floor(Math.random()*rareFlowers.length)];
+    else if (r < 0.9) {
+        chosen = rare[Math.floor(Math.random()*rare.length)];
         result.innerHTML = "Rarity: Rare";
     }
     else {
-        chosenFlower = opFlowers[Math.floor(Math.random()*opFlowers.length)];
+        chosen = op[Math.floor(Math.random()*op.length)];
         result.innerHTML = "Rarity: OP 🔥";
     }
 
-    farm.innerHTML = chosenFlower;
+    farm.innerHTML = chosen;
 }
 
-// ---------- FACTORY ----------
+// -------- FACTORY --------
 function startFactory() {
     factoryScore = 0;
 
-    let random = Math.random();
+    let area = document.getElementById("factoryArea");
+    area.innerHTML = "";
 
-    if (random < 0.6) {
+    let r = Math.random();
+
+    if (r < 0.6) {
         factoryRarity = "Bad";
         factoryGoal = randomRange(10,30);
         boxSpeed = 2; // slow
     }
-    else if (random < 0.9) {
+    else if (r < 0.9) {
         factoryRarity = "Rare";
         factoryGoal = randomRange(40,60);
         boxSpeed = 4; // medium
@@ -105,7 +105,7 @@ function startFactory() {
     else {
         factoryRarity = "OP";
         factoryGoal = randomRange(70,100);
-        boxSpeed = 5; // faster but clickable
+        boxSpeed = 5; // slightly faster but clickable
     }
 
     updateScore();
@@ -128,7 +128,7 @@ function createBox() {
         position += boxSpeed;
         box.style.left = position + "px";
 
-        if (position > window.innerWidth) {
+        if (position > area.offsetWidth) {
             clearInterval(move);
             box.remove();
         }
