@@ -1,3 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Duck Army Game</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            background: #222;
+            color: white;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #farmArea, #factoryArea {
+            margin-top: 20px;
+            min-height: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+            background: orange;
+            position: absolute;
+            top: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- MAIN MENU -->
+<div id="mainMenu">
+    <h1>🦆 Duck Army Game</h1>
+    <button onclick="showFarmer()">Farmer</button>
+    <button onclick="showMerchant()">Merchant</button>
+    <button onclick="showFactory()">Factory</button>
+</div>
+
+<!-- FARMER -->
+<div id="farmerMenu" class="hidden">
+    <h2>Farmer 🌱</h2>
+    <button onclick="startPlant()">Plant</button>
+    <div id="farmArea"></div>
+    <div id="result"></div>
+    <button onclick="goBack()">Back</button>
+</div>
+
+<!-- MERCHANT -->
+<div id="merchantMenu" class="hidden">
+    <h2>Merchant 🛒</h2>
+    <p>Coming Soon...</p>
+    <button onclick="goBack()">Back</button>
+</div>
+
+<!-- FACTORY -->
+<div id="factoryMenu" class="hidden">
+    <h2>Factory 🏭</h2>
+    <div id="factoryScore"></div>
+    <div id="factoryArea"></div>
+    <button onclick="stopFactory()">Back</button>
+</div>
+
 <script>
 let growTimer;
 
@@ -95,17 +171,17 @@ function startFactory() {
     if (r < 0.6) {
         factoryRarity = "Bad";
         factoryGoal = randomRange(10,30);
-        boxSpeed = 2; // slow
+        boxSpeed = 2;
     }
     else if (r < 0.9) {
         factoryRarity = "Rare";
         factoryGoal = randomRange(40,60);
-        boxSpeed = 4; // medium
+        boxSpeed = 4;
     }
     else {
         factoryRarity = "OP";
         factoryGoal = randomRange(70,100);
-        boxSpeed = 5; // slightly faster but clickable
+        boxSpeed = 5;
     }
 
     updateScore();
@@ -160,3 +236,6 @@ function stopFactory() {
     goBack();
 }
 </script>
+
+</body>
+</html>
